@@ -18,11 +18,16 @@ export const checkCollision = (
   for (let y = 0; y < player.tetromino.length; y += 1) {
     for (let x = 0; x < player.tetromino[y].length; x += 1) {
       if (player.tetromino[y][x] !== 0) {
-        if (
-          !stage[y + player.pos.y + moveY] ||
-          !stage[y + player.pos.y + moveY][x + player.pos.x + moveX] ||
-          stage[y + player.pos.y + moveY][x + player.pos.x + moveX][1] !== 'clear'
-        ) {
+        const newY = y + player.pos.y + moveY;
+        const newX = x + player.pos.x + moveX;
+
+        // ステージの範囲外チェック
+        if (newY < 0 || newY >= STAGE_HEIGHT || newX < 0 || newX >= STAGE_WIDTH) {
+          return true;
+        }
+
+        // 他のブロックとの衝突チェック
+        if (stage[newY][newX][1] !== 'clear') {
           return true;
         }
       }

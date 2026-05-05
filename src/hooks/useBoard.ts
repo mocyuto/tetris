@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createStage } from '../utils/combined';
+import { createStage, STAGE_WIDTH, STAGE_HEIGHT } from '../utils/combined';
 import type { Stage } from '../utils/combined';
 
 export const useBoard = (player: any, resetPlayer: () => void) => {
@@ -30,10 +30,21 @@ export const useBoard = (player: any, resetPlayer: () => void) => {
       player.tetromino.forEach((row: any, y: any) => {
         row.forEach((value: any, x: any) => {
           if (value !== 0) {
-            newStage[y + player.pos.y][x + player.pos.x] = [
-              value,
-              `${player.collided ? 'merged' : 'clear'}`,
-            ];
+            const stageY = y + player.pos.y;
+            const stageX = x + player.pos.x;
+
+            // 境界チェック
+            if (
+              stageY >= 0 &&
+              stageY < STAGE_HEIGHT &&
+              stageX >= 0 &&
+              stageX < STAGE_WIDTH
+            ) {
+              newStage[stageY][stageX] = [
+                value,
+                `${player.collided ? 'merged' : 'clear'}`,
+              ];
+            }
           }
         });
       });

@@ -17,7 +17,7 @@ const App: React.FC = () => {
   const [dropTime, setDropTime] = useState<number | null>(null);
   const [gameOver, setGameOver] = useState(false);
 
-  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
+  const [player, updatePlayerPos, resetPlayer, playerRotate, setPlayerPos] = usePlayer();
   const [stage, setStage, rowsCleared] = useBoard(player, resetPlayer);
   const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
 
@@ -83,12 +83,12 @@ const App: React.FC = () => {
       } else if (keyCode === 38) {
         playerRotate(stage, 1);
       } else if (keyCode === 32) {
-        // Hard drop
-        let droppedY = 0;
-        while (!checkCollision(player, stage, { x: 0, y: droppedY + 1 })) {
-          droppedY++;
+        // Hard drop - checkCollisionが正しく計算した距離をそのまま使用
+        let dropDistance = 0;
+        while (!checkCollision(player, stage, { x: 0, y: dropDistance + 1 })) {
+          dropDistance++;
         }
-        updatePlayerPos({ x: 0, y: droppedY, collided: true });
+        setPlayerPos({ x: player.pos.x, y: player.pos.y + dropDistance, collided: true });
       }
     }
   };
@@ -102,7 +102,10 @@ const App: React.FC = () => {
       className="tetris-wrapper"
       role="button"
       tabIndex={0}
-      onKeyDown={e => move(e)}
+      onKeyDown={e => {
+        e.preventDefault();
+        move(e);
+      }}
       onKeyUp={keyUp}
     >
       <div className="tetris">

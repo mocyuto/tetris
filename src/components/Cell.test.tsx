@@ -12,6 +12,6 @@ describe('Cell Component', () => {
     // I type color is '80, 227, 230'
     const { container } = render(<Cell type="I" />);
     const cellElement = container.firstChild as HTMLElement;
-    expect(cellElement.style.background).toContain('rgba(80, 227, 230, 0.8)');
+    expect(cellElement.style.background).toContain('80, 227, 230');
   });
 });

@@ -11,7 +11,9 @@ export const useGameStatus = (rowsCleared: number) => {
     // We have score
     if (rowsCleared > 0) {
       // This is how original Tetris score is calculated
-      setScore(prev => prev + linePoints[rowsCleared - 1] * (level + 1));
+      // Clamp to max 4 lines (index 3) to avoid undefined
+      const index = Math.min(rowsCleared, 4) - 1;
+      setScore(prev => prev + linePoints[index] * (level + 1));
       setRows(prev => prev + rowsCleared);
     }
   }, [level, linePoints, rowsCleared]);

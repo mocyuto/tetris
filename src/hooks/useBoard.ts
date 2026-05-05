@@ -58,7 +58,7 @@ export const useBoard = (player: any, resetPlayer: () => void) => {
       return newStage;
     };
 
-    setStage(prev => updateStage(prev));
+    setStage((prev: Stage) => updateStage(prev));
   }, [player, resetPlayer]);
 
   return [stage, setStage, rowsCleared] as const;

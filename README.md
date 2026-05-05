@@ -2,6 +2,9 @@
 
 This is a classic Tetris game built using React, TypeScript, and Vite.
 
+<img width="902" height="755" alt="スクリーンショット 2026-05-05 9 59 47" src="https://github.com/user-attachments/assets/0298109f-230b-43ea-9a12-bac1664976ed" />
+
+
 ## Features
 
 - **Classic Gameplay**: Move, rotate, and drop Tetrominoes.

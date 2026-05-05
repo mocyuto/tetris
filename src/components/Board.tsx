@@ -19,11 +19,11 @@ const Board: React.FC<BoardProps> = ({ stage }) => {
       <div className="relative glass rounded-2xl p-3 sm:p-4 bg-slate-900/90 shadow-2xl">
         {/* Grid */}
         <div
-          className="grid gap-[2px] bg-slate-800/30 rounded-xl overflow-hidden"
+          className="grid gap-[1px] sm:gap-[2px] bg-slate-800/30 rounded-xl overflow-hidden"
           style={{
             gridTemplateRows: `repeat(${rowCount}, 1fr)`,
             gridTemplateColumns: `repeat(${colCount}, 1fr)`,
-            width: 'min(70vw, 320px)',
+            width: 'min(85vw, 280px, 35vh)',
             aspectRatio: `${colCount} / ${rowCount}`,
           }}
         >

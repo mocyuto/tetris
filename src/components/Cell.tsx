@@ -36,8 +36,8 @@ const Cell: React.FC<CellProps> = ({ type }) => {
   return (
     <div
       className={`
-        relative aspect-square min-w-[14px] min-h-[14px]
-        ${isFilled ? 'border-[3px] rounded-sm' : ''}
+        relative aspect-square min-w-[10px] min-h-[10px] sm:min-w-[14px] sm:min-h-[14px]
+        ${isFilled ? 'border-[2px] sm:border-[3px] rounded-[1px] sm:rounded-sm' : ''}
         transition-all duration-150 ease-out
         ${isFilled ? 'scale-100' : 'scale-95'}
       `}

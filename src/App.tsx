@@ -25,6 +25,9 @@ const App: React.FC = () => {
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [lastTapTime, setLastTapTime] = useState<number>(0);
 
+  // ヘルプモーダル用のstate
+  const [showHelp, setShowHelp] = useState(false);
+
   const movePlayer = (dir: number) => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0, collided: false });
@@ -212,37 +215,59 @@ const App: React.FC = () => {
             </div>
           ) : (
             <>
-              {/* Score Card */}
-              <div className="glass rounded-lg sm:rounded-2xl p-2 sm:p-5 flex items-center justify-between group hover:border-cyan-500/30 transition-all duration-300 hover:bg-white/10">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-md sm:rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center shadow-lg">
-                    <span className="text-base sm:text-xl">🏆</span>
-                  </div>
-                  <span className="text-gray-400 text-xs sm:text-sm font-medium">Score</span>
+              {/* Mobile Compact Score Display - 横並び3つ */}
+              <div className="sm:hidden glass rounded-xl p-2 grid grid-cols-3 gap-1">
+                <div className="text-center">
+                  <div className="text-cyan-400 text-xs mb-0.5">🏆</div>
+                  <div className="text-white text-sm font-bold tabular-nums">{score.toLocaleString()}</div>
+                  <div className="text-gray-500 text-[8px]">Score</div>
                 </div>
-                <span className="text-lg sm:text-2xl font-bold text-white tabular-nums">{score.toLocaleString()}</span>
+                <div className="text-center border-x border-white/10">
+                  <div className="text-green-400 text-xs mb-0.5">📊</div>
+                  <div className="text-white text-sm font-bold tabular-nums">{rows}</div>
+                  <div className="text-gray-500 text-[8px]">Rows</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-purple-400 text-xs mb-0.5">⭐</div>
+                  <div className="text-white text-sm font-bold tabular-nums">{level}</div>
+                  <div className="text-gray-500 text-[8px]">Level</div>
+                </div>
               </div>
 
-              {/* Rows Card */}
-              <div className="glass rounded-lg sm:rounded-2xl p-2 sm:p-5 flex items-center justify-between group hover:border-green-500/30 transition-all duration-300 hover:bg-white/10">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-md sm:rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center shadow-lg">
-                    <span className="text-base sm:text-xl">📊</span>
+              {/* Desktop Score Cards */}
+              <div className="hidden sm:block">
+                {/* Score Card */}
+                <div className="glass rounded-2xl p-5 flex items-center justify-between group hover:border-cyan-500/30 transition-all duration-300 hover:bg-white/10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center shadow-lg">
+                      <span className="text-xl">🏆</span>
+                    </div>
+                    <span className="text-gray-400 text-sm font-medium">Score</span>
                   </div>
-                  <span className="text-gray-400 text-xs sm:text-sm font-medium">Rows</span>
+                  <span className="text-2xl font-bold text-white tabular-nums">{score.toLocaleString()}</span>
                 </div>
-                <span className="text-lg sm:text-2xl font-bold text-white tabular-nums">{rows}</span>
-              </div>
 
-              {/* Level Card */}
-              <div className="glass rounded-lg sm:rounded-2xl p-2 sm:p-5 flex items-center justify-between group hover:border-purple-500/30 transition-all duration-300 hover:bg-white/10">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-md sm:rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-lg">
-                    <span className="text-base sm:text-xl">⭐</span>
+                {/* Rows Card */}
+                <div className="glass rounded-2xl p-5 flex items-center justify-between group hover:border-green-500/30 transition-all duration-300 hover:bg-white/10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center shadow-lg">
+                      <span className="text-xl">📊</span>
+                    </div>
+                    <span className="text-gray-400 text-sm font-medium">Rows</span>
                   </div>
-                  <span className="text-gray-400 text-xs sm:text-sm font-medium">Level</span>
+                  <span className="text-2xl font-bold text-white tabular-nums">{rows}</span>
                 </div>
-                <span className="text-lg sm:text-2xl font-bold text-white tabular-nums">{level}</span>
+
+                {/* Level Card */}
+                <div className="glass rounded-2xl p-5 flex items-center justify-between group hover:border-purple-500/30 transition-all duration-300 hover:bg-white/10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-lg">
+                      <span className="text-xl">⭐</span>
+                    </div>
+                    <span className="text-gray-400 text-sm font-medium">Level</span>
+                  </div>
+                  <span className="text-2xl font-bold text-white tabular-nums">{level}</span>
+                </div>
               </div>
             </>
           )}
@@ -263,13 +288,12 @@ const App: React.FC = () => {
             </div>
           </button>
 
-          {/* Controls Info */}
-          <div className="glass rounded-lg sm:rounded-2xl p-2 sm:p-5 mt-1 sm:mt-2">
-            <h3 className="text-gray-300 font-semibold mb-2 flex items-center gap-2 text-xs sm:text-base">
+          {/* Desktop Controls Info - hidden on mobile */}
+          <div className="hidden sm:block glass rounded-2xl p-5 mt-2">
+            <h3 className="text-gray-300 font-semibold mb-3 flex items-center gap-2 text-base">
               <span className="text-cyan-400">⌨️</span> Controls
             </h3>
-            {/* Desktop controls - hidden on mobile */}
-            <div className="hidden sm:grid grid-cols-2 gap-2 text-xs sm:text-sm text-gray-400">
+            <div className="grid grid-cols-2 gap-2 text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <kbd className="px-2 py-1 bg-slate-800 rounded text-gray-300 font-mono border border-slate-700 text-xs">←</kbd>
                 <span>Left</span>
@@ -291,29 +315,6 @@ const App: React.FC = () => {
                 <span>Hard Drop</span>
               </div>
             </div>
-            {/* Mobile controls - shown only on mobile */}
-            <div className="sm:hidden grid grid-cols-2 gap-1 text-[10px] text-gray-400">
-              <div className="flex items-center gap-1">
-                <span className="text-cyan-400">👈</span>
-                <span>Swipe ←</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-cyan-400">👉</span>
-                <span>Swipe →</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-cyan-400">👇</span>
-                <span>Swipe ↓</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-cyan-400">👆</span>
-                <span>Swipe ↑</span>
-              </div>
-              <div className="flex items-center gap-1 col-span-2">
-                <span className="text-cyan-400">👆👆</span>
-                <span>Double Tap = Hard Drop</span>
-              </div>
-            </div>
           </div>
 
           {/* Desktop Title */}
@@ -327,6 +328,68 @@ const App: React.FC = () => {
           </div>
         </aside>
       </div>
+
+      {/* Mobile Help Button (FAB) */}
+      <button
+        onClick={() => setShowHelp(true)}
+        className="sm:hidden fixed bottom-4 right-4 w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white text-xl font-bold shadow-lg shadow-cyan-500/30 active:scale-90 transition-transform z-50 flex items-center justify-center"
+        aria-label="Help"
+      >
+        ?
+      </button>
+
+      {/* Help Modal */}
+      {showHelp && (
+        <div 
+          className="sm:hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowHelp(false)}
+        >
+          <div 
+            className="glass rounded-2xl p-5 w-full max-w-xs bg-slate-900/95 border border-white/20"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-bold text-lg">How to Play</h3>
+              <button 
+                onClick={() => setShowHelp(false)}
+                className="text-gray-400 text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">👈</span>
+                <span className="text-gray-300">Swipe Left - Move Left</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">👉</span>
+                <span className="text-gray-300">Swipe Right - Move Right</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">👇</span>
+                <span className="text-gray-300">Swipe Down - Drop Faster</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">👆</span>
+                <span className="text-gray-300">Swipe Up - Rotate</span>
+              </div>
+              <div className="flex items-center gap-3 pt-2 border-t border-white/10">
+                <span className="text-2xl">👆👆</span>
+                <span className="text-gray-300">Double Tap - Hard Drop</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowHelp(false)}
+              className="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold active:scale-95 transition-transform"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

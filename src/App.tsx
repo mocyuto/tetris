@@ -128,11 +128,11 @@ const App: React.FC = () => {
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!touchStart) return;
-    
+
     const touch = e.touches[0];
     const deltaX = touch.clientX - touchStart.x;
     const deltaY = touch.clientY - touchStart.y;
-    
+
     // スワイプ判定
     if (Math.abs(deltaX) > SWIPE_THRESHOLD || Math.abs(deltaY) > SWIPE_THRESHOLD) {
       // 水平方向のスワイプ
@@ -145,12 +145,14 @@ const App: React.FC = () => {
       } else {
         // 垂直方向のスワイプ
         if (deltaY > 0) {
-          dropPlayer(); // 下（ソフトドロップ）
+          // タッチ中は dropTime を停止せず drop() のみ実行
+          // handleTouchEnd で復元する
+          drop();
         } else {
           playerRotate(stage, 1); // 上（回転）
         }
       }
-      
+
       // スワイプ後、新しい開始位置を設定（連続操作可能に）
       setTouchStart({ x: touch.clientX, y: touch.clientY });
     }
@@ -158,6 +160,10 @@ const App: React.FC = () => {
 
   const handleTouchEnd = () => {
     setTouchStart(null);
+    // タッチ終了時に dropTime を復元（長押しで自動落下が止まるのを防ぐ）
+    if (!gameOver) {
+      setDropTime(1000 / (level + 1) + 200);
+    }
   };
 
   useInterval(() => {
@@ -166,7 +172,7 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 overflow-hidden outline-none touch-none select-none"
+      className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 overflow-hidden outline-none touch-none select-none [-webkit-touch-callout:none]"
       role="button"
       tabIndex={0}
       onKeyDown={e => {
@@ -177,6 +183,7 @@ const App: React.FC = () => {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onContextMenu={e => e.preventDefault()}
     >
       {/* Animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
